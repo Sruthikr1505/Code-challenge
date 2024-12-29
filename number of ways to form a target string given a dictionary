@@ -1,0 +1,22 @@
+class Solution:
+    def numWays(self, words: list[str], target: str) -> int:
+        MOD = 10**9 + 7
+        n = len(words[0])
+        m = len(target)
+        
+        char_count = [{} for _ in range(n)]
+        for word in words:
+            for i, char in enumerate(word):
+                if char not in char_count[i]:
+                    char_count[i][char] = 0
+                char_count[i][char] += 1
+        dp = [0] * (m + 1)
+        dp[0] = 1  
+        for col in range(n):
+            for i in range(m - 1, -1, -1):
+                char = target[i]
+                if char in char_count[col]:
+                    dp[i + 1] += dp[i] * char_count[col][char]
+                    dp[i + 1] %= MOD
+        
+        return dp[m]
